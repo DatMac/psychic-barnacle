@@ -15,6 +15,35 @@
     <!-- Animated Background Layer -->
     <div class="bg-layer" id="bg-layer"></div>
 
+    <!-- Floating Music Player -->
+    <div id="music-player" class="music-player">
+        <audio id="bg-music" loop>
+            <source src="music.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        
+        <div class="player-content">
+            <div class="disc-container">
+                <div class="vinyl-disc"></div>
+                <div class="music-note">🎵</div>
+            </div>
+            <div class="track-info">
+                <span class="track-title">Playing for you...</span>
+                <span class="track-status" id="track-status">Tap to play 💖</span>
+            </div>
+            <div class="controls">
+                <button id="play-pause-btn" class="control-btn" aria-label="Play/Pause">
+                    <svg viewBox="0 0 24 24" class="play-icon active">
+                        <path fill="currentColor" d="M8 5v14l11-7z"/>
+                    </svg>
+                    <svg viewBox="0 0 24 24" class="pause-icon">
+                        <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Container -->
     <main class="card" id="main-card">
         
@@ -30,7 +59,7 @@
         <!-- The Question Screen -->
         <section id="question-screen" class="screen hidden">
             <div class="media-container">
-                <img id="main-gif" class="active" src="https://gifdb.com/images/high/cute-bear-silvia-emoji-gif-z0343wle1ch6vs3x.gif" alt="Cute bears looking up">
+                <img id="main-gif" class="active" src="gifs/cute-bear-silvia-emoji-gif-z0343wle1ch6vs3x.gif" alt="Cute bears looking up">
             </div>
             <h1 class="question-text">Do you love me? 🥺</h1>
             <p class="subtitle" id="subtitle">Be honest...</p>
@@ -49,7 +78,7 @@
         <!-- The Success Screen -->
         <section id="success-screen" class="screen hidden">
             <div class="media-container">
-                <img id="success-gif" class="active" src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" alt="Happy kissing bears">
+                <img id="success-gif" class="active" src="gifs/bear-kiss-bear-kisses.gif" alt="Happy kissing bears">
             </div>
             <h1 class="success-text">Yay! I knew it! 🥰</h1>
             <p class="success-message">You just made my entire day.<br>I love you too! ❤️</p>

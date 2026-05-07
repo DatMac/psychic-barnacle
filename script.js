@@ -1,4 +1,92 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Music Player System ---
+    const musicPlayer = document.getElementById('music-player');
+    const audio = document.getElementById('bg-music');
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    const playIcon = playPauseBtn.querySelector('.play-icon');
+    const pauseIcon = playPauseBtn.querySelector('.pause-icon');
+    const vinylDisc = document.querySelector('.vinyl-disc');
+    const trackStatus = document.getElementById('track-status');
+    
+    let isPlaying = false;
+    let hasAttemptedAutoplay = false;
+
+    // Lower default volume so it's romantic and not deafening
+    audio.volume = 0.4;
+
+    function toggleMusic(forcePlay = false) {
+        if (isPlaying && !forcePlay) {
+            // Pause
+            audio.pause();
+            isPlaying = false;
+            vinylDisc.classList.remove('spin');
+            playIcon.classList.add('active');
+            pauseIcon.classList.remove('active');
+            trackStatus.textContent = "Paused";
+            
+            // Collapse to minimal mode when paused
+            musicPlayer.classList.add('minimized');
+        } else {
+            // Play
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    isPlaying = true;
+                    vinylDisc.classList.add('spin');
+                    playIcon.classList.remove('active');
+                    pauseIcon.classList.add('active');
+                    trackStatus.textContent = "Now Playing ✨";
+                    
+                    // Stay expanded when playing
+                    musicPlayer.classList.remove('minimized');
+                }).catch(error => {
+                    // Autoplay was blocked by browser
+                    console.log("Autoplay prevented:", error);
+                    trackStatus.textContent = "Tap to play 💖";
+                    // Stay expanded if it needs interaction
+                    musicPlayer.classList.remove('minimized');
+                });
+            }
+        }
+    }
+
+    // Toggle on button click
+    playPauseBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation(); // Prevent triggering player expansion
+        toggleMusic();
+    });
+
+    // Expand player when clicking the whole card (only relevant if paused/minimized)
+    musicPlayer.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (musicPlayer.classList.contains('minimized')) {
+            musicPlayer.classList.remove('minimized');
+        }
+    });
+
+    // Try to autoplay quietly on first user interaction anywhere on the page
+    document.body.addEventListener('click', (e) => {
+        // Prevent body click from intercepting actual button clicks
+        if (e.target.tagName.toLowerCase() === 'button' || e.target.closest('button')) {
+            return; 
+        }
+        
+        if (!hasAttemptedAutoplay && !isPlaying) {
+            hasAttemptedAutoplay = true;
+            toggleMusic(true);
+        }
+    });
+
+    // Attempt absolute autoplay immediately on load
+    window.addEventListener('load', () => {
+        if (!isPlaying) {
+            toggleMusic(true);
+        }
+    });
+
+
     // 1. Optimized Background Shapes
     const bgLayer = document.getElementById('bg-layer');
     // Reduced from 15 to 8 shapes for better rendering performance
@@ -20,77 +108,77 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Data Progression Array (Looping sequence)
     const progression = [
         {
-            gif: "https://gifdb.com/images/high/cute-bear-silvia-emoji-gif-z0343wle1ch6vs3x.gif",
+            gif: "gifs/cute-bear-silvia-emoji-gif-z0343wle1ch6vs3x.gif",
             text: "Be honest...",
             noText: "No"
         },
         {
-            gif: "https://gifdb.com/images/high/mochi-cat-confused-iydhq395cbdpypu7.gif",
+            gif: "gifs/mochi-cat-confused-iydhq395cbdpypu7.gif",
             text: "Are you sure? 🤔",
             noText: "Think again!"
         },
         {
-            gif: "https://gifdb.com/images/high/peach-and-goma-playing-l6xoal9z84okzjq0.gif",
+            gif: "gifs/peach-and-goma-playing-l6xoal9z84okzjq0.gif",
             text: "Think about it again! 🤨",
             noText: "Still no?"
         },
         {
-            gif: "https://gifdb.com/images/high/milk-and-mocha-alone-genrma4r1r6wstl9.gif",
+            gif: "gifs/milk-and-mocha-alone-genrma4r1r6wstl9.gif",
             text: "Please don't do this 🥺",
             noText: "Too slow! 🐢"
         },
         {
-            gif: "https://gifdb.com/images/high/milk-and-mocha-coaxing-qmvyxq6hvdxj2vy2.gif",
+            gif: "gifs/milk-and-mocha-coaxing-qmvyxq6hvdxj2vy2.gif",
             text: "You're breaking my heart 💔",
             noText: "Catch me!"
         },
         {
-            gif: "https://gifdb.com/images/high/mochi-cat-thrown-to-bin-xuax0u2dekrembij.gif",
+            gif: "gifs/mochi-cat-thrown-to-bin-xuax0u2dekrembij.gif",
             text: "I'll do anything! 😭",
             noText: "Nope! 🏃💨"
         },
         {
-            gif: "https://gifdb.com/images/high/milk-and-mocha-kicking-dqs2wukw9kn5kcqa.gif",
+            gif: "gifs/milk-and-mocha-kicking-dqs2wukw9kn5kcqa.gif",
             text: "Why are you running away?! 🏃",
             noText: "Over here!"
         },
         {
-            gif: "https://gifdb.com/images/high/poor-crying-cat-t9apz9cfxzj4cgai.gif",
+            gif: "gifs/poor-crying-cat-t9apz9cfxzj4cgai.gif",
             text: "I'm actually crying now 😭",
             noText: "Nice try!"
         },
         {
-            gif: "https://gifdb.com/images/high/frustrating-crying-cat-otveuu3sdmb473ky.gif",
+            gif: "gifs/frustrating-crying-cat-otveuu3sdmb473ky.gif",
             text: "PLEASE JUST SAY YES!!! 😫",
             noText: "Oops! Missed!"
         },
         {
-            gif: "https://gifdb.com/images/high/screaming-crying-cat-xl6msgx53ws3shux.gif",
+            gif: "gifs/screaming-crying-cat-xl6msgx53ws3shux.gif",
             text: "I WON'T GIVE UP! 😤",
             noText: "Can't touch this"
         },
         {
-            gif: "https://gifdb.com/images/high/mochi-cat-holding-heart-y9fz23so3eptrx4o.gif",
+            gif: "gifs/mochi-cat-holding-heart-y9fz23so3eptrx4o.gif",
             text: "Okay I'm calm... please? 🥺",
             noText: "I'm invincible"
         },
         {
-            gif: "https://gifdb.com/images/high/peach-and-goma-v20vf9wazvmvfqsi.gif",
+            gif: "gifs/peach-and-goma-v20vf9wazvmvfqsi.gif",
             text: "Just click the pink button! 💖",
             noText: "Stop it!"
         },
         {
-            gif: "https://gifdb.com/images/high/peach-and-goma-cozying-up-fynbhr20x1ccnc6q.gif",
+            gif: "gifs/peach-and-goma-cozying-up-fynbhr20x1ccnc6q.gif",
             text: "I'll give you a big hug! 🤗",
             noText: "No means no!"
         },
         {
-            gif: "https://gifdb.com/images/high/milk-and-mocha-lying-vk0z6bc3ohaqrjc9.gif",
+            gif: "gifs/milk-and-mocha-lying-vk0z6bc3ohaqrjc9.gif",
             text: "Don't make me sad again... 😿",
             noText: "Ah ah ah!"
         },
         {
-            gif: "https://gifdb.com/images/high/mochi-cat-sweeping-broom-eg8ureo5eiiikt93.gif",
+            gif: "gifs/mochi-cat-sweeping-broom-eg8ureo5eiiikt93.gif",
             text: "Last chance! 😠",
             noText: "I'm fast as boi"
         }
@@ -110,13 +198,17 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     // 4. Flow Handlers
-    openBtn.addEventListener('click', () => {
+    openBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         switchScreen(introScreen, questionScreen);
         // Start the yes button gentle pulse once visible
         yesBtn.classList.add('pulse');
     });
 
-    yesBtn.addEventListener('click', () => {
+    yesBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         dodger.cleanup();
         
         if (noBtn && noBtn.parentNode) {
@@ -124,7 +216,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         switchScreen(questionScreen, successScreen);
-        fireConfetti();
+        
+        // Delay confetti slightly so it doesn't freeze the DOM during the screen transition
+        setTimeout(() => {
+            fireConfetti();
+        }, 250);
     });
 
     // 5. High-Performance Spring Physics Dodger System
@@ -174,7 +270,10 @@ document.addEventListener('DOMContentLoaded', () => {
         },
 
         dodge(e) {
-            if (e) e.preventDefault();
+            // Do not prevent default if it's a click event so the global listener can still pick it up if needed,
+            // but we do want to prevent default on touch to stop scrolling/zooming.
+            if (e && e.type === 'touchstart') e.preventDefault();
+            
             if (this.isCleanedUp) return;
 
             // Throttle to prevent chaotic spamming from rapid cursor movements (200ms lock)
@@ -326,16 +425,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function switchScreen(hideElement, showElement) {
+        // Trigger exit animation on old screen
         hideElement.classList.remove('active');
+        hideElement.classList.add('exit');
         
-        setTimeout(() => {
-            hideElement.style.display = 'none';
-            showElement.style.display = 'flex';
-            
-            // Force reflow
-            void showElement.offsetWidth;
-            showElement.classList.add('active');
-        }, 500);
+        // Trigger entrance animation on new screen
+        showElement.classList.remove('hidden'); // Fallback cleanup
+        showElement.classList.remove('exit');
+        showElement.classList.add('active');
     }
 
     function createFloatingShape(container) {
