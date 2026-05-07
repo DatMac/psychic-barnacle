@@ -66,18 +66,98 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Try to autoplay quietly on first user interaction anywhere on the page
-    document.body.addEventListener('click', (e) => {
-        // Prevent body click from intercepting actual button clicks
-        if (e.target.tagName.toLowerCase() === 'button' || e.target.closest('button')) {
-            return; 
-        }
+    // --- Easter Egg: The Sad Ending ---
+    const sadScreen = document.getElementById('sad-screen');
+    const sadDialogue = document.getElementById('sad-dialogue');
+    const restartBtn = document.getElementById('restart-btn');
+
+    audio.addEventListener('ended', () => {
+        // If they already said yes, do nothing!
+        if (hasAccepted) return;
+
+        // Trigger the cinematic sad mode
+        dodger.cleanup();
         
+        // Remove the dodging No button if it's attached to the body
+        if (noBtn && noBtn.parentNode) {
+            noBtn.parentNode.removeChild(noBtn);
+        }
+
+        document.body.classList.add('sad-mode');
+        
+        // Ensure music player shows it ended
+        isPlaying = false;
+        vinylDisc.classList.remove('spin');
+        playIcon.classList.add('active');
+        pauseIcon.classList.remove('active');
+        trackStatus.textContent = "Song Ended...";
+        musicPlayer.classList.add('minimized');
+
+        switchScreen(questionScreen, sadScreen);
+
+        // Determine dialogue based on how much they interacted
+        let finalMessage = "";
+        if (dodger.count === 0) {
+            finalMessage = "I guess some things aren't meant to be... 🥀";
+        } else if (dodger.count < 5) {
+            finalMessage = "Maybe in another timeline... 🌌";
+        } else {
+            finalMessage = "The music stopped, but my heart is still beating for you... 💔";
+        }
+
+        // Cinematic typewriter effect after a brief pause
+        setTimeout(() => {
+            typeWriter(finalMessage, sadDialogue);
+        }, 1500);
+    });
+
+    function typeWriter(text, element, i = 0) {
+        if (i === 0) {
+            element.textContent = '';
+            element.classList.add('type-cursor');
+        }
+        if (i < text.length) {
+            element.textContent += text.charAt(i);
+            setTimeout(() => typeWriter(text, element, i + 1), 70); // Typin speed
+        } else {
+            setTimeout(() => {
+                element.classList.remove('type-cursor');
+                // Reveal the rewind button gracefully after the message finishes
+                restartBtn.style.visibility = 'visible';
+                restartBtn.style.opacity = '1';
+                restartBtn.style.pointerEvents = 'auto';
+            }, 2000);
+        }
+    }
+
+    // Rewind Time (Restart)
+    restartBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Cinematic fade to black, then reload the page
+        document.body.style.background = '#000';
+        document.body.style.opacity = '0';
+        
+        setTimeout(() => {
+            location.reload();
+        }, 1500);
+    });
+
+    // Ensure music starts on the very first interaction anywhere on the page
+    function startMusicOnInteraction(e) {
+        // If they explicitly clicked the music controls, let the control handler manage it
+        if (e.target.closest('#music-player')) return;
+
         if (!hasAttemptedAutoplay && !isPlaying) {
             hasAttemptedAutoplay = true;
             toggleMusic(true);
         }
-    });
+    }
+
+    // Use capture phase to catch the click before buttons call stopPropagation()
+    document.addEventListener('click', startMusicOnInteraction, { capture: true });
+    document.addEventListener('touchstart', startMusicOnInteraction, { capture: true, passive: true });
 
     // Attempt absolute autoplay immediately on load
     window.addEventListener('load', () => {
@@ -197,6 +277,9 @@ document.addEventListener('DOMContentLoaded', () => {
         "Okay fine, I do! ❤️"
     ];
 
+    // Easter Egg State
+    let hasAccepted = false;
+
     // 4. Flow Handlers
     openBtn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -209,6 +292,8 @@ document.addEventListener('DOMContentLoaded', () => {
     yesBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
+        
+        hasAccepted = true;
         dodger.cleanup();
         
         if (noBtn && noBtn.parentNode) {

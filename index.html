@@ -14,14 +14,15 @@
 <body>
     <!-- Animated Background Layer -->
     <div class="bg-layer" id="bg-layer"></div>
+    <div id="dark-overlay" class="dark-overlay"></div>
 
     <!-- Floating Music Player -->
     <div id="music-player" class="music-player">
-        <audio id="bg-music" loop>
+        <audio id="bg-music">
             <source src="music.mp3" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
-        
+
         <div class="player-content">
             <div class="disc-container">
                 <div class="vinyl-disc"></div>
@@ -46,7 +47,7 @@
 
     <!-- Main Container -->
     <main class="card" id="main-card">
-        
+
         <!-- Loading / Intro Screen -->
         <section id="intro-screen" class="screen active">
             <div class="envelope">
@@ -63,7 +64,7 @@
             </div>
             <h1 class="question-text">Do you love me? 🥺</h1>
             <p class="subtitle" id="subtitle">Be honest...</p>
-            
+
             <div class="buttons-container">
                 <button id="yes-btn" class="primary-btn">
                     <span class="btn-text">Of course I do 💖</span>
@@ -82,6 +83,16 @@
             </div>
             <h1 class="success-text">Yay! I knew it! 🥰</h1>
             <p class="success-message">You just made my entire day.<br>I love you too! ❤️</p>
+        </section>
+
+        <!-- The Sad/Easter Egg Screen -->
+        <section id="sad-screen" class="screen hidden">
+            <div class="media-container sad-container">
+                <img id="sad-gif" class="active" src="gifs/milk-and-mocha-alone-genrma4r1r6wstl9.gif" alt="Sad bear">
+            </div>
+            <h1 class="sad-text" id="sad-dialogue"></h1>
+            <p class="subtitle mt-2" style="margin-bottom: 20px;">The music faded before we did...</p>
+            <button id="restart-btn" class="glass-btn" style="opacity: 0; transition: opacity 2s ease; visibility: hidden; pointer-events: none;">Rewind Time</button>
         </section>
 
     </main>
