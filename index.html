@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For You 💝</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti for the finale -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <!-- Animated Background Layer -->
+    <div class="bg-layer" id="bg-layer"></div>
+
+    <!-- Main Container -->
+    <main class="card" id="main-card">
+        
+        <!-- Loading / Intro Screen -->
+        <section id="intro-screen" class="screen active">
+            <div class="envelope">
+                <div class="envelope-heart">💌</div>
+            </div>
+            <h2 class="fade-in-text">I have a question for you...</h2>
+            <button id="open-btn" class="glass-btn mt-2 fade-in-delayed">Open it</button>
+        </section>
+
+        <!-- The Question Screen -->
+        <section id="question-screen" class="screen hidden">
+            <div class="media-container">
+                <img id="main-gif" class="active" src="https://gifdb.com/images/high/cute-bear-silvia-emoji-gif-z0343wle1ch6vs3x.gif" alt="Cute bears looking up">
+            </div>
+            <h1 class="question-text">Do you love me? 🥺</h1>
+            <p class="subtitle" id="subtitle">Be honest...</p>
+            
+            <div class="buttons-container">
+                <button id="yes-btn" class="primary-btn">
+                    <span class="btn-text">Of course I do 💖</span>
+                    <div class="btn-glow"></div>
+                </button>
+                <button id="no-btn" class="secondary-btn">
+                    <span>No</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- The Success Screen -->
+        <section id="success-screen" class="screen hidden">
+            <div class="media-container">
+                <img id="success-gif" class="active" src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" alt="Happy kissing bears">
+            </div>
+            <h1 class="success-text">Yay! I knew it! 🥰</h1>
+            <p class="success-message">You just made my entire day.<br>I love you too! ❤️</p>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
