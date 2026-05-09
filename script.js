@@ -95,23 +95,53 @@ document.addEventListener('DOMContentLoaded', () => {
         trackStatus.textContent = "Song Ended...";
         musicPlayer.classList.add('minimized');
 
-        const activeScreen = document.querySelector('.screen.active') || questionScreen;
-        switchScreen(activeScreen, sadScreen);
+        // Immediately hide all text/buttons on the intro screen to prevent visual artifacts
+        const introElements = introScreen.querySelectorAll('h2, button, .envelope');
+        introElements.forEach(el => {
+            el.style.display = 'none';
+        });
 
-        // Determine dialogue based on how much they interacted
-        let finalMessage = "";
-        if (dodger.count === 0) {
-            finalMessage = "I guess some things aren't meant to be... 🥀";
-        } else if (dodger.count < 5) {
-            finalMessage = "Maybe in another timeline... 🌌";
-        } else {
-            finalMessage = "The music stopped, but my heart is still beating for you... 💔";
-        }
-
-        // Cinematic typewriter effect after a brief pause
+        // Clean up any screen currently showing and prepare for sequential transition
+        const screens = document.querySelectorAll('.screen');
+        screens.forEach(screen => {
+            if (screen !== sadScreen) {
+                if (screen.classList.contains('active')) {
+                    // Fade out the currently active screen
+                    screen.classList.remove('active');
+                    screen.classList.add('exit');
+                    // Fully remove it from document flow after fade completes
+                    setTimeout(() => {
+                        screen.style.display = 'none';
+                    }, 600);
+                } else {
+                    // Ensure already hidden screens don't accidentally appear
+                    screen.style.display = 'none';
+                }
+            }
+        });
+        
+        // Wait for the previous screen to fully unmount before showing sad screen
         setTimeout(() => {
-            typeWriter(finalMessage, sadDialogue);
-        }, 1500);
+            sadScreen.style.display = ''; // Reset display in case it was modified
+            sadScreen.classList.remove('hidden');
+            sadScreen.classList.remove('exit');
+            sadScreen.classList.add('active');
+
+            // Determine dialogue based on how much they interacted
+            let finalMessage = "";
+            if (dodger.count === 0) {
+                finalMessage = "I guess some things aren't meant to be... 🥀";
+            } else if (dodger.count < 5) {
+                finalMessage = "Maybe in another timeline... 🌌";
+            } else {
+                finalMessage = "The music stopped, but my heart is still beating for you... 💔";
+            }
+
+            // Cinematic typewriter effect after a brief pause
+            setTimeout(() => {
+                typeWriter(finalMessage, sadDialogue);
+            }, 900); // 600ms (wait) + 900ms = 1500ms total delay
+        }, 600);
     });
 
     function typeWriter(text, element, i = 0) {
@@ -515,6 +545,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function switchScreen(hideElement, showElement) {
+        // Double check we are not already in sad-mode before doing normal transitions
+        if (document.body.classList.contains('sad-mode') && showElement !== sadScreen) return;
+        
         // Trigger exit animation on old screen
         hideElement.classList.remove('active');
         hideElement.classList.add('exit');
