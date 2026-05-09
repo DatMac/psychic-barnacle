@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     audio.volume = 0.4;
 
     function toggleMusic(forcePlay = false) {
+        if (document.body.classList.contains('sad-mode')) return;
+        
         if (isPlaying && !forcePlay) {
             // Pause
             audio.pause();
@@ -73,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     audio.addEventListener('ended', () => {
         // If they already said yes, do nothing!
-        if (hasAccepted) return;
+        if (hasAccepted || document.body.classList.contains('sad-mode')) return;
 
         // Trigger the cinematic sad mode
         dodger.cleanup();
@@ -93,7 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
         trackStatus.textContent = "Song Ended...";
         musicPlayer.classList.add('minimized');
 
-        switchScreen(questionScreen, sadScreen);
+        const activeScreen = document.querySelector('.screen.active') || questionScreen;
+        switchScreen(activeScreen, sadScreen);
 
         // Determine dialogue based on how much they interacted
         let finalMessage = "";
@@ -284,6 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
     openBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
+        if (document.body.classList.contains('sad-mode')) return;
         switchScreen(introScreen, questionScreen);
         // Start the yes button gentle pulse once visible
         yesBtn.classList.add('pulse');
@@ -292,6 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
     yesBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
+        if (document.body.classList.contains('sad-mode')) return;
         
         hasAccepted = true;
         dodger.cleanup();
